@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultado da Pesquisa - Luxury Wheels{% endblock %}
+
+{% block content %}
+<div class='container mt-4'>
+    <h2>Resultados da Pesquisa</h2>
+    <div class='row mt-3'>
+        {% if resultados %}
+        {% for veiculo in resultados %}
+        <div class='col-md-6 mb-4'>
+            <div class='card'>
+                <img src="{{ url_for('static', filename=veiculo.imagem_url) }}" class='card-img-top'
+                    alt='Imagem do Veículo'>
+                <div class='card-body'>
+                    <h5 class='card-title'>{{ veiculo.marca.nome }} {{ veiculo.modelo.nome }}</h5>
+                    <p class='card-text'><strong>Categoria:</strong> {{ veiculo.categoria.nome }}</p>
+                    <p class='card-text'><strong>Transmissão:</strong> {{ veiculo.transmissao.nome }}</p>
+                    <p class='card-text'><strong>Motor:</strong> {{ veiculo.tipo_motor.nome }}</p>
+                    <p class='card-text'><strong>Lugares:</strong> {{ veiculo.passageiros }}</p>
+                    <p class='card-text'><strong>Diária:</strong> € {{ veiculo.diaria }}</p>
+                    <p class='card-text'><strong>Valor Total:</strong> € {{ veiculo.diaria * dias_reserva }}</p>
+                    <form method='POST' action="{{ url_for('set_cookies') }}">
+                        <input type='hidden' name='veiculo_id' value='{{ veiculo.id }}'>
+                        <input type='hidden' name='valor_total' value='{{ veiculo.diaria*dias_reserva }}'>
+                        <button type='submit' class='btn btn-primary'>Reservar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class='col'>
+            <p>Nenhum veículo encontrado com os critérios de pesquisa selecionados.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

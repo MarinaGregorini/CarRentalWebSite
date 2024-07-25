@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Luxury Wheels{% endblock %}
+
+{% block content %}
+<div class='container'>
+    <h1>PESQUISA</h1>
+    <div class='border border-primary p-3'>
+        <div class='form-row'>
+            <form method='POST' action="{{ url_for('resultado_da_pesquisa') }}" onsubmit='return validateDates()'>
+                <label for='tipoVeiculo'>Que tipo de veículo pretende?</label><br>
+                {% for tipo_veiculo in tipos_veiculos %}
+                <div class='form-check form-check-inline'>
+                    <input class='form-check-input' type='checkbox' id='tipo_veiculo' name='tipoVeiculo'
+                        value={{tipo_veiculo.id}}>
+                    <label class='form-check-label' for={{tipo_veiculo.id}}>{{tipo_veiculo.nome}}</label>
+                </div>
+                {% endfor %}
+                <div class='form-row'>
+                    <div class='form-group col-md-6'>
+                        <label for='levantamento'>Data de Levantamento:</label>
+                        <input type='datetime-local' class='form-control' id='levantamento' name='levantamento'
+                            required>
+                    </div>
+                    <div class='form-group col-md-6'>
+                        <label for='devolucao'>Data de Devolução:</label>
+                        <input type='datetime-local' class='form-control' id='devolucao' name='devolucao' required>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal'
+                        data-target='#filtrosModal'>
+                        Filtros
+                    </button>
+                </div>
+                <div class='modal fade' id='filtrosModal' tabindex='-1' role='dialog'
+                    aria-labelledby='filtrosModalLabel' aria-hidden='true'>
+                    <div class='modal-dialog' role='document'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <h5 class='modal-title' id='filtrosModalLabel'>Filtros</h5>
+                                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                    <span aria-hidden='true'>&times;</span>
+                                </button>
+                            </div>
+                            <div class='modal-body'>
+                                <div class='form-group'>
+                                    <label for='transmissao'>Transmissão:</label><br>
+                                    {% for transmissao in transmissoes %}
+                                    <div class='form-check form-check-inline'>
+                                        <input class='form-check-input' type='checkbox' id='transmissao'
+                                            name='transmissao' value={{transmissao.id}}>
+                                        <label class='form-check-label'
+                                            for={{transmissao.id}}>{{transmissao.nome}}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class='form-group'>
+                                    <label for='motor'>Motor:</label><br>
+                                    {% for tipo_motor in tipos_motores %}
+                                    <div class='form-check form-check-inline'>
+                                        <input class='form-check-input' type='checkbox' id='tipo_motor'
+                                            name='tipo_motor' value={{tipo_motor.id}}>
+                                        <label class='form-check-label'
+                                            for={{tipo_motor.id}}>{{tipo_motor.nome}}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class='form-group'>
+                                    <label for='marca'>Marcas:</label>
+                                    <select class='form-control' id='marca' name='marca' multiple>
+                                        {% for marca in marcas %}
+                                        <option value={{marca.id}}>{{marca.nome}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='categoria'>Categoria:</label>
+                                    <select class='form-control' id='categoria' name='categoria' multiple>
+                                        {% for categoria in categorias %}
+                                        <option value={{categoria.id}}>{{categoria.nome}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='diaria'>Valor da Diária:</label>
+                                    <input type='range' class='form-control-range' id='diaria' name='diaria' min='0'
+                                        max='1000'>
+                                    <span id='diaria_valor'>500</span>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='lugares'>Quantidade de Lugares:</label><br>
+                                    <div class='form-check form-check-inline'>
+                                        <input class='form-check-input' type='checkbox' id='lugares1_4' name='lugares'
+                                            value='lugares1_4'>
+                                        <label class='form-check-label' for='lugares1_4'>1-4</label>
+                                    </div>
+                                    <div class='form-check form-check-inline'>
+                                        <input class='form-check-input' type='checkbox' id='lugares5_6' name='lugares'
+                                            value='lugares5_6'>
+                                        <label class='form-check-label' for='lugares5_6'>5-6</label>
+                                    </div>
+                                    <div class='form-check form-check-inline'>
+                                        <input class='form-check-input' type='checkbox' id='lugares7+' name='lugares'
+                                            value='lugares7+'>
+                                        <label class='form-check-label' for='lugares7+'>7+</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='modal-footer'>
+                                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Concluir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <button type='submit' class='btn btn-primary'>Pesquisar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br><br>
+    <script>
+        function validateDates() {
+            const pickupDate = document.getElementById('levantamento').value;
+            const returnDate = document.getElementById('devolucao').value;
+
+            if (new Date(returnDate) < new Date(pickupDate)) {
+                document.getElementById('dateError').style.display = 'block';
+                return false;
+            }
+
+            document.getElementById('dateError').style.display = 'none';
+            return true;
+
+        }
+        const rangeInput = document.getElementById('diaria');
+        const valorDiariaSpan = document.getElementById('diaria_valor');
+
+        rangeInput.addEventListener('input', function () {
+            valorDiariaSpan.textContent = rangeInput.value;
+        });
+    </script>
+
+    {% endblock %}

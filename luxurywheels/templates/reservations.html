@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Minhas Reservas - Luxury Wheels{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<div class='container mt-4'>
+    <h1>Minhas Reservas</h1>
+    {% if reserva_atual %}
+    <div class='d-flex justify-content-center mb-4'>
+        <div class='card' style='width: 100%; max-width: 800px;'>
+            <div class='row no-gutters'>
+                <div class='col-md-5'>
+                    <img src="{{ url_for('static', filename=veiculos[reserva_atual.veiculo_id].imagem_url) }}"
+                        class='card-img' alt='Imagem do Veículo'>
+                </div>
+                <div class='col-md-7'>
+                    <div class='card-body'>
+                        <h4 class='card-title'>Reserva Atual</h4>
+                        <h5 class='card-title'>Código da Reserva: {{ reserva_atual.id }}</h5>
+                        <p class='card-text'><strong>Veículo:</strong> {{ veiculos[reserva_atual.veiculo_id].marca.nome
+                            }} {{ veiculos[reserva_atual.veiculo_id].modelo.nome }}</p>
+                        <p class='card-text'><strong>Data de Levantamento:</strong> {{
+                            reserva_atual.data_inicio.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p class='card-text'><strong>Data de Devolução:</strong> {{
+                            reserva_atual.data_final.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p class='card-text'>Para alterar ou cancelar esta reserva, contacte-nos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<div class='row'>
+    {% for reserva in outras_reservas %}
+    <div class='col-md-6 mb-4'>
+        <div class='card'>
+            <div class='row no-gutters'>
+                <div class='col-md-6'>
+                    <img src="{{ url_for('static', filename=veiculos[reserva.veiculo_id].imagem_url) }}"
+                        class='card-img' alt='Imagem do Veículo'>
+                </div>
+                <div class='col-md-6'>
+                    <div class='card-body'>
+                        <h5 class='card-title'>Código da Reserva: {{ reserva.id }}</h5>
+                        <p class='card-text'><strong>Veículo:</strong> {{ veiculos[reserva.veiculo_id].marca.nome }}
+                            {{ veiculos[reserva.veiculo_id].modelo.nome }}</p>
+                        <p class='card-text'><strong>Data de Levantamento:</strong> {{
+                            reserva.data_inicio.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p class='card-text'><strong>Data de Devolução:</strong> {{
+                            reserva.data_final.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p class='card-text'><strong>Valor Total:</strong> € {{
+                            pagamentos[reserva.pagamento_id].valor_reserva }}</p>
+                        <div class='d-flex'>
+                            <a href="{{ url_for('alterar_reserva', reserva_id=reserva.id) }}"
+                                class='btn btn-dark mr-2'>Alterar</a>
+                            <button type='button' class='btn btn-dark' data-toggle='modal'
+                                data-target='#cancelModal{{ reserva.id }}'>Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='modal fade' id='cancelModal{{ reserva.id }}' tabindex='-1'
+                aria-labelledby='cancelModalLabel{{ reserva.id }}' aria-hidden='true'>
+                <div class='modal-dialog'>
+                    <div class='modal-content'>
+                        <div class='modal-header'>
+                            <h5 class='modal-title' id='cancelModalLabel{{ reserva.id }}'>Cancelar Reserva</h5>
+                            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                <span aria-hidden='true'>&times;</span>
+                            </button>
+                        </div>
+                        <div class='modal-body'>
+                            Tem certeza que deseja cancelar esta reserva?<br>
+                            Seu reembolso será emitido em até 15 dias úteis.
+                        </div>
+                        <div class='modal-footer'>
+                            <form method='POST' action="{{ url_for('cancelar_reserva', reserva_id=reserva.id) }}">
+                                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Não</button>
+                                <button type='submit' class='btn btn-danger'>Sim, cancelar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+</div>
+{% endblock %}

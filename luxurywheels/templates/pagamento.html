@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Pagamento - Luxury Wheels{% endblock %}
+
+{% block content %}
+<div class='container mt-4'>
+    <h2>Resumo da reserva</h2>
+    <div class='row mt-3'>
+        <div class='col-md-6 mb-4'>
+            <div class='card'>
+                <div class='row no-gutters'>
+                    <div class='col-md-6'>
+                        <img src="{{ url_for('static', filename=veiculo.imagem_url) }}" class='card-img'
+                            alt='Imagem do Veículo'>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class='card-body'>
+                            <h5 class='card-title'>{{ veiculo.marca.nome }} {{ veiculo.modelo.nome }}</h5>
+                            <p class='card-text'><strong>Categoria:</strong> {{ veiculo.categoria.nome }}</p>
+                            <p class='card-text'><strong>Transmissão:</strong> {{ veiculo.transmissao.nome }}</p>
+                            <p class='card-text'><strong>Motor:</strong> {{ veiculo.tipo_motor.nome }}</p>
+                            <p class='card-text'><strong>Diária:</strong> € {{ veiculo.diaria }}</p>
+                            <p class='card-text'><strong>Valor Total:</strong> € {{ valor_total }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class='container mt-4'>
+    <h2>Pagamento</h2>
+    <form method='POST' action="{{ url_for('pagamento') }}">
+        <div class='form-group'>
+            <label for='nome_cartao'>Nome no Cartão:</label>
+            <input type='text' class='form-control' id='nome_cartao' name='nome_cartao' required>
+        </div>
+        <div class='form-group'>
+            <label for='numero_cartao'>Número do Cartão:</label>
+            <input type='text' class='form-control' id='numero_cartao' name='numero_cartao' required>
+        </div>
+        <div class='form-group'>
+            <label for='validade'>Validade:</label>
+            <input type='text' class='form-control' id='validade' name='validade' pattern='(0[1-9]|1[0-2])\/\d{2}'
+                placeholder='MM/YY' maxlength='5' required>
+        </div>
+        <div class='form-group'>
+            <label for='cvv'>CVV:</label>
+            <input type='text' class='form-control' id='cvv' name='cvv' required>
+        </div>
+        <button type='submit' class='btn btn-primary'>Pagar</button>
+    </form>
+</div>
+{% endblock %}

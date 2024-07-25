@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultado da Pesquisa - Luxury Wheels{% endblock %}
+
+{% block content %}
+
+<div class='container mt-5'>
+    <div class='card'>
+        <div class='card-header bg-success text-white'>
+            <h4 class='mb-0'>Confirmação de Reserva</h4>
+        </div>
+        <div class='card-body'>
+            <p class='card-text'>A sua reserva está confirmada! Veja abaixo os detalhes:</p>
+
+            <div class='row'>
+                <div class='col-md-6'>
+                    <p><strong>Código da Reserva:</strong> {{ reserva_id }}</p>
+                    <p><strong>Valor pago:</strong> € {{ valor_total }}</p>
+                    <p><strong>Veículo:</strong> {{ veiculo.marca.nome }} {{ veiculo.modelo.nome }}</p>
+                    <p><strong>Data de Levantamento:</strong> {{ levantamento }}</p>
+                    <p><strong>Data de Devolução:</strong> {{ devolucao }}</p>
+                    <p><strong>Morada para Levantamento:</strong> Av. Infante Dom Henrique 1, 1100-105, Lisboa </p>
+                </div>
+            </div>
+            <div class='row mt-3'>
+                <div class='col-md-12'>
+                    <h6><strong>Precisa de ajuda? Fale conosco:</strong></h6>
+                    <p><strong>Telefone:</strong> <a href='tel:+351123456789'>+351 123456789</a></p>
+                    <p><strong>Email:</strong>contact@luxurywheels.com</p>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='text-center mt-4'>
+        <a href="{{ url_for('home') }}" class='btn btn-primary'>Voltar ao Início</a>
+        <a href="{{ url_for('reservas') }}" class='btn btn-primary'>Minhas Reservas</a>
+    </div>
+</div>
+{% endblock %}
