@@ -380,7 +380,11 @@ def reservas():
             data_inicio = reserva.data_inicio.date()
             data_final = reserva.data_final.date()
 
-            if data_inicio <= data_atual <= data_final:
+            if data_final < data_atual:
+
+                session.delete(reserva)
+
+            elif data_inicio <= data_atual <= data_final:
 
                 reserva_atual = reserva
 
